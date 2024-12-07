@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ферма - Игра</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #E3F2FD;
+            text-align: center;
+            padding: 0;
+            margin: 0;
+            height: 100vh;
+            background-image: url('https://example.com/farm-background.jpg'); /* Ссылка на изображение фона */
+            background-size: cover;
+            background-position: center;
+            color: white;
+        }
+
+        h1 {
+            font-size: 36px;
+            margin-top: 20px;
+            color: #fff;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+        }
+
+        .harvest-btn {
+            padding: 15px 30px;
+            font-size: 20px;
+            background-color: #8B4513; /* Цвет кнопки в стиле дерева */
+            color: white;
+            border: 2px solid #6A3E28;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .harvest-btn:hover {
+            background-color: #A0522D; /* Цвет кнопки при наведении */
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .score {
+            font-size: 24px;
+            margin-top: 20px;
+            color: #FFD700;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+        }
+
+        .content {
+            background-color: rgba(0, 0, 0, 0.6); /* Тёмный полупрозрачный фон для текста */
+            padding: 50px;
+            border-radius: 15px;
+            margin-top: 50px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .image {
+            width: 300px;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        /* Липучка для интерфейсов */
+        .sticky-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #FFD700;
+            padding: 15px;
+            border-radius: 50%;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+            z-index: 1000;
+        }
+
+        .sticky-btn img {
+            width: 50px;
+            height: 50px;
+        }
+
+        /* Скрытые интерфейсы внутри липучки */
+        .additional-content {
+            display: none; /* Начальный стиль - скрыто */
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            margin: 10px 0;
+            border-radius: 10px;
+            color: white;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-out; /* Плавная анимация */
+        }
+
+        .additional-content.show {
+            max-height: 500px; /* Устанавливаем максимальную высоту для анимации */
+        }
+
+        /* Кнопка для закрытия интерфейса */
+        .close-btn {
+            margin-top: 20px;
+            background-color: #FF6347;
+            padding: 10px 20px;
+            font-size: 18px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .close-btn:hover {
+            background-color: #FF4500;
+        }
+
+        /* Кнопки для переключения между интерфейсами */
+        .nav-btn {
+            margin: 10px;
+            padding: 10px 20px;
+            background-color: #32CD32;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .nav-btn:hover {
+            background-color: #28A745;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="content">
+        <h1>Добро пожаловать на вашу ферму!</h1>
+        <p>Нажмите кнопку, чтобы собрать урожай!</p>
+
+        <button class="harvest-btn" onclick="harvest()">Собрать урожай</button>
+
+        <p class="score">Собрано: <span id="harvestCount">0</span> единиц</p>
+
+        <!-- Добавим картинку урожая -->
+        <img src="https://example.com/harvest-image.jpg" alt="Фермерский урожай" class="image">
+    </div>
+
+    <!-- Липучка с интерфейсами -->
+    <div class="sticky-btn" onclick="toggleAdditionalContent()">
+        <img src="https://example.com/icon.png" alt="Иконка">
+    </div>
+
+    <!-- Интерфейсы внутри липучки -->
+    <div id="stickyContent" class="additional-content">
+        <h2>Интерфейс 1: Статистика</h2>
+        <p>Здесь отображаются статистика вашей фермы, сколько всего собрано урожая и другие данные.</p>
+        <button class="nav-btn" onclick="toggleAdditionalContent()">Перейти к Интерфейсу 2</button>
+        <button class="close-btn" onclick="toggleAdditionalContent()">Закрыть</button>
+    </div>
+
+    <div id="stickyContent2" class="additional-content">
+        <h2>Интерфейс 2: Достижения</h2>
+        <p>Здесь вы можете увидеть ваши достижения на ферме, например, сколько животных вы вырастили.</p>
+        <button class="nav-btn" onclick="toggleAdditionalContent()">Перейти к Интерфейсу 3</button>
+        <button class="close-btn" onclick="toggleAdditionalContent()">Закрыть</button>
+    </div>
+
+    <div id="stickyContent3" class="additional-content">
+        <h2>Интерфейс 3: Магазин</h2>
+        <p>В этом интерфейсе вы можете купить улучшения для своей фермы.</p>
+        <button class="close-btn" onclick="toggleAdditionalContent()">Закрыть</button>
+    </div>
+
+    <script>
+        // Загрузка сохраненного количества урожая из LocalStorage
+        let harvestCount = localStorage.getItem("harvestCount") ? parseInt(localStorage.getItem("harvestCount")) : 0;
+
+        // Обновление отображаемого количества урожая
+        document.getElementById("harvestCount").textContent = harvestCount;
+
+        // Функция сбора урожая
+        function harvest() {
+            harvestCount++;
+            document.getElementById("harvestCount").textContent = harvestCount;
+
+            // Сохранение обновленного количества в LocalStorage
+            localStorage.setItem("harvestCount", harvestCount);
+        }
+
+        // Функция для переключения видимости дополнительных интерфейсов внутри липучки
+        function toggleAdditionalContent() {
+            const content = document.getElementById("stickyContent");
+            const content2 = document.getElementById("stickyContent2");
+            const content3 = document.getElementById("stickyContent3");
+
+            // Проверяем, что контенты скрыты или видимы, и переключаем их
+            if (content.style.display === "none" || content.style.display === "") {
+                content.style.display = "block";
+                setTimeout(() => content.classList.add("show"), 100); // Анимация появления
+            } else {
+                content.classList.remove("show");
+                setTimeout(() => content.style.display = "none", 500); // После анимации скрыть
+            }
+
+            if (content2.style.display === "none" || content2.style.display === "") {
+                content2.style.display = "block";
+                setTimeout(() => content2.classList.add("show"), 100); // Анимация появления
+            } else {
+                content2.classList.remove("show");
+                setTimeout(() => content2.style.display = "none", 500); // После анимации скрыть
+            }
+
+            if (content3.style.display === "none" || content3.style.display === "") {
+                content3.style.display = "block";
+                setTimeout(() => content3.classList.add("show"), 100); // Анимация появления
+            } else {
+                content3.classList.remove("show");
+                setTimeout(() => content3.style.display = "none", 500); // После анимации скрыть
+            }
+        }
+    </script>
+
+</body>
+</html>
